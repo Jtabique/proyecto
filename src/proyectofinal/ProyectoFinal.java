@@ -6,12 +6,12 @@ import java.util.Scanner;
 
 public class ProyectoFinal {
     //Variables globales
-    public static double ventas;
+    public static int ventas;
     public static double proVendidos;
     public static double totVendido;
-    public static double ventEfect;
-    public static double ventTarj;
-    public static double ventTrans;
+    public static int ventEfect;
+    public static int ventTarj;
+    public static int ventTrans;
     public static double mayor;
     public static double menor;
 
@@ -75,13 +75,14 @@ public class ProyectoFinal {
     // Parte de registro ventas 
     public static void registroVenta(){
         Scanner teclado = new Scanner(System.in);
-        System.out.println("Ha ingresado a Registar Venta");
+        System.out.println("===== REGISTRAR VENTA =====");
         // Variables 
         double cantPro;
         double codigo;
         String nombre;
         double precio;
         double cantidad;
+        int volver = 0;
 
         int i = 0;
         double subProducto; 
@@ -98,6 +99,9 @@ public class ProyectoFinal {
         int opPago = 0;
         String tipo = "";
         
+        int confirmaTransf = 0;
+        int p;
+        
         
         // Primer ciclo
         do{
@@ -108,7 +112,7 @@ public class ProyectoFinal {
             }
         }while(cantPro <= 0);
         
-        while(i< cantPro){
+        for (i = 0; i < cantPro; i++){
             do{
             System.out.println("Ingrese el codigo del producto.");
             codigo = teclado.nextDouble();
@@ -135,10 +139,11 @@ public class ProyectoFinal {
                 System.out.println("El precio del producto debe ser mayor a cero");
             }
             
-        }while(precio <=0 || cantidad <= 0);
-            i = i + 1;
+             }while(precio <=0 || cantidad <= 0);
             
+   
         }
+        
         //Descuentos
         if (subTotal < 200) {
             descuento = 0;
@@ -160,14 +165,16 @@ public class ProyectoFinal {
         
         do {
             System.out.println("Ingrese su forma de pago:\n" +
-                               "ingrese 1 para Efectivo,\n" +
+                               "ingrese \n"
+                             + "1 para Efectivo,\n" +
                                "2 para Tarjeta y\n" +
                                "3 para Transferencia.");
             opPago = teclado.nextInt();
             switch (opPago){
                 case 1: //Efectivo
-                    System.out.println("El total a pagar es de: Q" + total + " en efectivo");
+                    System.out.println("---- El total a pagar es de: Q" + total + " en efectivo ----");
                     pagTotal = total;
+                    System.out.println("Ingrese el pago: ");
                     
                     do {
                         pago = teclado.nextDouble();
@@ -194,13 +201,61 @@ public class ProyectoFinal {
                     break;
                     
                 case 2://Tarjeta
-                    System.out.println("El total a pagar es de: Q" + total + " a traves de su tarjeta");
+                    System.out.println("---- El total a pagar es de: Q" + total + " a traves de su tarjeta ----");
+                    System.out.println("Pase su tarjeta");
+
+                    // Efecto visual: imprime 8 puntos, uno cada medio segundo,
+                    // para simular que la tarjeta se esta procesando
+                    for (p = 0; p < 8; p++) {
+                        System.out.print(".");
+                        System.out.flush(); // muestra el punto de inmediato, sin esperar al salto de linea
+
+                        // Thread.sleep pausa el programa 500 milisegundos (medio segundo).
+                        // Java obliga a usar try/catch porque la pausa podria interrumpirse.
+                        try {
+                            Thread.sleep(500); //aqui se cambian los segundo
+                        } catch (InterruptedException e) {
+                        // No se hace nada si se interrumpe, el programa continua normal
+                        }
+                    
+                    }
+
+                    System.out.println(); // baja a la siguiente linea despues de los puntos
+                    System.out.println("Cobro realizado");
+
                     tipo = "Tarjeta";
                     ventTarj = ventTarj + 1;
                     
                     break;
                 case 3://Transferencia
-                    System.out.println("El total a transferir es de: Q" + total);
+                    System.out.println("---- El total a transferir es de: Q" + total + " ----");
+                    System.out.println("Banco: Banco Industrial");
+                    System.out.println("No de Cuenta: 12134123 \n"
+                                     + "Tipo: Monetaria");
+                    // Referencia simulada (como la boleta de un banco): "TR-" + numero de transferencia
+                    System.out.println("Referencia: TR-" + (ventTrans + 1));
+
+                    // Espera hasta que el cliente confirme que ya hizo la transferencia
+                    
+                    while (confirmaTransf != 1) {
+                        System.out.println("Ingrese 1 cuando haya realizado la transferencia");
+                        confirmaTransf = teclado.nextInt();
+                    }
+
+                    // Efecto visual de verificacion: 6 puntos, uno cada medio segundo
+                    System.out.print("Verificando transferencia");
+                    for (p = 0; p < 6; p++) {
+                        System.out.print(".");
+                        System.out.flush();
+                        try { // intenta pausar medio segundo
+                            Thread.sleep(500); // Aqui se cambia el tiempo
+                        } catch (InterruptedException e) {
+                        // No se hace nada, el programa continua normal
+                        }
+                    }
+                    System.out.println();
+                    System.out.println("Transferencia recibida. Cobro realizado");
+
                     tipo = "Transferencia";
                     ventTrans = ventTrans + 1;
                     
@@ -216,7 +271,7 @@ public class ProyectoFinal {
         
         if (opPago == 1) {
             System.out.println("-----Resumen de venta-----\n"
-                             + "Cantidad de productos vendidos" + cantPro + "\n"
+                             + "Cantidad de productos vendidos: " + cantPro + "\n"
                              + "Sub total: Q" + subTotal + "\n"
                              + "Descuento aplicado: Q" + descuento + "\n"
                              + "Iva aplicado: Q" + iva + "\n"
@@ -228,7 +283,7 @@ public class ProyectoFinal {
             
         }else {
             System.out.println("-----Resumen de venta-----\n"
-                             + "Cantidad de productos vendidos" + cantPro + "\n"
+                             + "Cantidad de productos vendidos: " + cantPro + "\n"
                              + "Sub total: Q" + subTotal + "\n"
                              + "Descuento aplicado: Q" + descuento + "\n"
                              + "Iva aplicado: Q" + iva + "\n"
@@ -253,12 +308,19 @@ public class ProyectoFinal {
         }else if(total < menor){
             menor = total;
         }
+        
+        
+        while (volver != 1) {
+        System.out.println("Ingrese 1 para regresar al menu");
+        volver = teclado.nextInt();
+        }
 
         
         
     }
     
     public static void consultarCaja(){
+        int volver = 0;
         Scanner teclado = new Scanner(System.in);
         System.out.println("===== CONSULTA DE CAJA ===== \n"
                 + "============================ \n"
@@ -269,16 +331,24 @@ public class ProyectoFinal {
                 + "Cantidad de ventas con tarjeta realizadas: " + ventTarj + "\n"
                 + "Cantidad de ventas por transferencias: " + ventTrans + "\n"
                 + "-_-_-_-_-_-_-_-_-_-_-_-_-_-_-");
+         while (volver != 1) {
+        System.out.println("Ingrese 1 para regresar al menu");
+        volver = teclado.nextInt();
+        }
+
     
     }
     
     public static void estadisticas(){
+        Scanner teclado = new Scanner(System.in);
         
         double promedio;
+        int volver = 0;
         
         System.out.println("===== ESTADISTICAS =====");
         if (ventas == 0) {
-            System.out.println("No existen ventas regristradas");
+            System.out.println("No existen ventas registradas.\n"
+                         + "========================");
               
         }else{
             promedio = totVendido / ventas;
@@ -290,11 +360,17 @@ public class ProyectoFinal {
                              + "Cantidad de ventas en efectivo realizadas: " + ventEfect + "\n"
                              + "Cantidad de ventas con tarjeta realizadas: " + ventTarj + "\n"
                              + "Cantidad de ventas por transferencias: " + ventTrans + "\n"
+                             + "---------------------------- \n"
                              + "Venta de mayor valor: Q" + mayor + "\n"
                              + "Venta de menor valor: Q" + menor + "\n"
                              + "-_-_-_-_-_-_-_-_-_-_-_-_-_-_-");
         
         }
+         while (volver != 1) {
+        System.out.println("Ingrese 1 para regresar al menu");
+        volver = teclado.nextInt();
+        }
+
     
     }
     

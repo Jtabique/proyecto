@@ -150,7 +150,7 @@ public class ProyectoFinal {
             descuento = subTotal * 0.08;
         }else{
             descuento = subTotal * 0.10;
-        }
+        }//aqui puedes añadir otro descuento
         
         montoDes = subTotal - descuento;
         iva =montoDes * 0.12;
